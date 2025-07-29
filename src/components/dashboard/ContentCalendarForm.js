@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { 
-  Building, 
-  Target, 
-  Palette, 
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import {
+  Building,
+  Target,
+  Palette,
   MessageSquare,
   Sparkles,
-  ArrowRight
-} from 'lucide-react';
+  ArrowRight,
+} from "lucide-react";
 
 const schema = yup.object({
-  businessName: yup.string().required('Business name is required'),
-  industry: yup.string().required('Industry is required'),
-  targetAudience: yup.string().required('Target audience is required'),
-  businessGoals: yup.string().required('Business goals are required'),
-  contentTypes: yup.array().min(1, 'Select at least one content type'),
-  postingFrequency: yup.string().required('Posting frequency is required'),
-  brandVoice: yup.string().required('Brand voice is required'),
+  businessName: yup.string().required("Business name is required"),
+  industry: yup.string().required("Industry is required"),
+  targetAudience: yup.string().required("Target audience is required"),
+  businessGoals: yup.string().required("Business goals are required"),
+  contentTypes: yup.array().min(1, "Select at least one content type"),
+  postingFrequency: yup.string().required("Posting frequency is required"),
+  brandVoice: yup.string().required("Brand voice is required"),
   specialEvents: yup.string(),
   competitors: yup.string(),
-  currentChallenges: yup.string().required('Current challenges are required'),
+  currentChallenges: yup.string().required("Current challenges are required"),
 });
 
 const ContentCalendarForm = ({ onSubmit, isLoading }) => {
@@ -34,22 +34,25 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
     formState: { errors },
     watch,
     setValue,
-    getValues
+    getValues,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      contentTypes: []
-    }
+      contentTypes: [],
+    },
   });
 
-  const contentTypes = watch('contentTypes') || [];
+  const contentTypes = watch("contentTypes") || [];
 
   const handleContentTypeChange = (type) => {
-    const current = getValues('contentTypes') || [];
+    const current = getValues("contentTypes") || [];
     if (current.includes(type)) {
-      setValue('contentTypes', current.filter(t => t !== type));
+      setValue(
+        "contentTypes",
+        current.filter((t) => t !== type),
+      );
     } else {
-      setValue('contentTypes', [...current, type]);
+      setValue("contentTypes", [...current, type]);
     }
   };
 
@@ -72,8 +75,12 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <Building className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Tell us about your business</h3>
-              <p className="text-gray-600">Help us understand your brand and industry</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Tell us about your business
+              </h3>
+              <p className="text-gray-600">
+                Help us understand your brand and industry
+              </p>
             </div>
 
             <div>
@@ -81,15 +88,17 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Business Name *
               </label>
               <input
-                {...register('businessName')}
+                {...register("businessName")}
                 type="text"
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.businessName ? 'border-red-300' : 'border-gray-300'
+                  errors.businessName ? "border-red-300" : "border-gray-300"
                 }`}
                 placeholder="Enter your business name"
               />
               {errors.businessName && (
-                <p className="mt-1 text-sm text-red-600">{errors.businessName.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.businessName.message}
+                </p>
               )}
             </div>
 
@@ -98,9 +107,9 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Industry *
               </label>
               <select
-                {...register('industry')}
+                {...register("industry")}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.industry ? 'border-red-300' : 'border-gray-300'
+                  errors.industry ? "border-red-300" : "border-gray-300"
                 }`}
               >
                 <option value="">Select your industry</option>
@@ -117,7 +126,9 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 <option value="other">Other</option>
               </select>
               {errors.industry && (
-                <p className="mt-1 text-sm text-red-600">{errors.industry.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.industry.message}
+                </p>
               )}
             </div>
 
@@ -126,15 +137,17 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Target Audience *
               </label>
               <textarea
-                {...register('targetAudience')}
+                {...register("targetAudience")}
                 rows={3}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.targetAudience ? 'border-red-300' : 'border-gray-300'
+                  errors.targetAudience ? "border-red-300" : "border-gray-300"
                 }`}
                 placeholder="Describe your ideal customers (age, interests, demographics, etc.)"
               />
               {errors.targetAudience && (
-                <p className="mt-1 text-sm text-red-600">{errors.targetAudience.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.targetAudience.message}
+                </p>
               )}
             </div>
           </div>
@@ -145,8 +158,12 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <Target className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Your Goals & Content</h3>
-              <p className="text-gray-600">What do you want to achieve with your content?</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Your Goals & Content
+              </h3>
+              <p className="text-gray-600">
+                What do you want to achieve with your content?
+              </p>
             </div>
 
             <div>
@@ -154,15 +171,17 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Business Goals *
               </label>
               <textarea
-                {...register('businessGoals')}
+                {...register("businessGoals")}
                 rows={3}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.businessGoals ? 'border-red-300' : 'border-gray-300'
+                  errors.businessGoals ? "border-red-300" : "border-gray-300"
                 }`}
                 placeholder="What are your main business objectives? (increase sales, brand awareness, lead generation, etc.)"
               />
               {errors.businessGoals && (
-                <p className="mt-1 text-sm text-red-600">{errors.businessGoals.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.businessGoals.message}
+                </p>
               )}
             </div>
 
@@ -172,16 +191,19 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  'Educational Posts',
-                  'Behind the Scenes',
-                  'Product Showcases',
-                  'Customer Stories',
-                  'Industry News',
-                  'Tips & Tutorials',
-                  'Inspirational Quotes',
-                  'User Generated Content'
+                  "Educational Posts",
+                  "Behind the Scenes",
+                  "Product Showcases",
+                  "Customer Stories",
+                  "Industry News",
+                  "Tips & Tutorials",
+                  "Inspirational Quotes",
+                  "User Generated Content",
                 ].map((type) => (
-                  <label key={type} className="flex items-center space-x-3 cursor-pointer">
+                  <label
+                    key={type}
+                    className="flex items-center space-x-3 cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       checked={contentTypes.includes(type)}
@@ -193,7 +215,9 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 ))}
               </div>
               {errors.contentTypes && (
-                <p className="mt-1 text-sm text-red-600">{errors.contentTypes.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.contentTypes.message}
+                </p>
               )}
             </div>
 
@@ -202,9 +226,9 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Posting Frequency *
               </label>
               <select
-                {...register('postingFrequency')}
+                {...register("postingFrequency")}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.postingFrequency ? 'border-red-300' : 'border-gray-300'
+                  errors.postingFrequency ? "border-red-300" : "border-gray-300"
                 }`}
               >
                 <option value="">Select posting frequency</option>
@@ -215,7 +239,9 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 <option value="weekly">Weekly</option>
               </select>
               {errors.postingFrequency && (
-                <p className="mt-1 text-sm text-red-600">{errors.postingFrequency.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.postingFrequency.message}
+                </p>
               )}
             </div>
           </div>
@@ -226,8 +252,12 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <Palette className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Brand Voice & Style</h3>
-              <p className="text-gray-600">How should your brand sound and feel?</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Brand Voice & Style
+              </h3>
+              <p className="text-gray-600">
+                How should your brand sound and feel?
+              </p>
             </div>
 
             <div>
@@ -235,21 +265,27 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Brand Voice & Tone *
               </label>
               <select
-                {...register('brandVoice')}
+                {...register("brandVoice")}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.brandVoice ? 'border-red-300' : 'border-gray-300'
+                  errors.brandVoice ? "border-red-300" : "border-gray-300"
                 }`}
               >
                 <option value="">Select your brand voice</option>
-                <option value="professional">Professional & Authoritative</option>
+                <option value="professional">
+                  Professional & Authoritative
+                </option>
                 <option value="friendly">Friendly & Approachable</option>
                 <option value="casual">Casual & Conversational</option>
                 <option value="playful">Playful & Fun</option>
-                <option value="inspirational">Inspirational & Motivating</option>
+                <option value="inspirational">
+                  Inspirational & Motivating
+                </option>
                 <option value="educational">Educational & Informative</option>
               </select>
               {errors.brandVoice && (
-                <p className="mt-1 text-sm text-red-600">{errors.brandVoice.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.brandVoice.message}
+                </p>
               )}
             </div>
 
@@ -258,7 +294,7 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Special Events & Holidays
               </label>
               <textarea
-                {...register('specialEvents')}
+                {...register("specialEvents")}
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                 placeholder="Any special events, holidays, or seasonal campaigns you want to include? (Black Friday, company anniversary, etc.)"
@@ -270,7 +306,7 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Competitors
               </label>
               <textarea
-                {...register('competitors')}
+                {...register("competitors")}
                 rows={2}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                 placeholder="Who are your main competitors? (This helps us differentiate your content)"
@@ -284,8 +320,12 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <MessageSquare className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Final Details</h3>
-              <p className="text-gray-600">Help us create the perfect content strategy</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Final Details
+              </h3>
+              <p className="text-gray-600">
+                Help us create the perfect content strategy
+              </p>
             </div>
 
             <div>
@@ -293,26 +333,33 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
                 Current Content Challenges *
               </label>
               <textarea
-                {...register('currentChallenges')}
+                {...register("currentChallenges")}
                 rows={4}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors ${
-                  errors.currentChallenges ? 'border-red-300' : 'border-gray-300'
+                  errors.currentChallenges
+                    ? "border-red-300"
+                    : "border-gray-300"
                 }`}
                 placeholder="What challenges are you facing with content creation? What would you like our AI to help you solve?"
               />
               {errors.currentChallenges && (
-                <p className="mt-1 text-sm text-red-600">{errors.currentChallenges.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.currentChallenges.message}
+                </p>
               )}
             </div>
 
             <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
               <div className="flex items-center space-x-3 mb-3">
                 <Sparkles className="w-6 h-6 text-purple-600" />
-                <h4 className="text-lg font-semibold text-gray-900">Ready to Generate!</h4>
+                <h4 className="text-lg font-semibold text-gray-900">
+                  Ready to Generate!
+                </h4>
               </div>
               <p className="text-gray-700">
-                Our AI will analyze your responses and create a personalized 30-day content calendar 
-                with post ideas, captions, and optimal posting times tailored to your business.
+                Our AI will analyze your responses and create a personalized
+                30-day content calendar with post ideas, captions, and optimal
+                posting times tailored to your business.
               </p>
             </div>
           </div>
@@ -328,11 +375,15 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
       {/* Progress bar */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">Step {currentStep} of {totalSteps}</span>
-          <span className="text-sm text-gray-500">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+          <span className="text-sm font-medium text-gray-700">
+            Step {currentStep} of {totalSteps}
+          </span>
+          <span className="text-sm text-gray-500">
+            {Math.round((currentStep / totalSteps) * 100)}% Complete
+          </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className="bg-gradient-to-r from-purple-600 to-blue-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${(currentStep / totalSteps) * 100}%` }}
           ></div>
@@ -350,8 +401,8 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
             disabled={currentStep === 1}
             className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
               currentStep === 1
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
             Previous
@@ -388,4 +439,4 @@ const ContentCalendarForm = ({ onSubmit, isLoading }) => {
   );
 };
 
-export default ContentCalendarForm; 
+export default ContentCalendarForm;

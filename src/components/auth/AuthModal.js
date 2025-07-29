@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import LoginForm from './LoginForm';
-import SignupForm from './SignupForm';
+import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 
-const AuthModal = ({ isOpen, onClose, defaultForm = 'login' }) => {
-  const [isLogin, setIsLogin] = useState(defaultForm === 'login');
+const AuthModal = ({ isOpen, onClose, defaultForm = "login" }) => {
+  const [isLogin, setIsLogin] = useState(defaultForm === "login");
 
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
-      setIsLogin(defaultForm === 'login');
+      setIsLogin(defaultForm === "login");
     }
   }, [isOpen, defaultForm]);
 
@@ -23,7 +23,7 @@ const AuthModal = ({ isOpen, onClose, defaultForm = 'login' }) => {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         {/* Background overlay */}
-        <div 
+        <div
           className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
           onClick={onClose}
         ></div>
@@ -54,4 +54,4 @@ const AuthModal = ({ isOpen, onClose, defaultForm = 'login' }) => {
   );
 };
 
-export default AuthModal; 
+export default AuthModal;

@@ -1,21 +1,43 @@
-# Test Credentials for Stop Drop Scroll
+# Demo Mode Information
 
-## Demo Login Information
+## ⚠️ Important Security Notice
 
-**Email:** test@stopdropscroll.co  
-**Password:** testpassword123  
-**Display Name:** Test User
+This application is currently running in **DEMO MODE**. No real authentication is being performed.
 
-## How to Test
+## Demo Access
 
-1. Click "Get Started" in the navigation
-2. Use the "Fill Test Credentials" button in the login/signup forms
-3. Or manually enter the credentials above
-4. Access the dashboard to test the content calendar generation
+The application will automatically detect if you have configured real Supabase credentials. If not, it will run in demo mode with simulated authentication.
 
-## Notes
+**Demo Credentials:**
+- Email: demo@stopdropscroll.co
+- Password: DemoPassword123!
 
-- This is a demo mode with mock authentication
-- The system simulates Supabase authentication without requiring real credentials
-- All data is stored locally and will be lost on page refresh
-- To use with real Supabase, update the configuration in `src/config/supabase.js` 
+## Production Setup
+
+To use this application with real authentication:
+
+1. **Set up Supabase:**
+   - Create a project at [supabase.com](https://supabase.com)
+   - Copy your project URL and anon key
+
+2. **Configure Environment Variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your actual Supabase credentials
+   ```
+
+3. **Enable Authentication:**
+   - The application will automatically switch to production mode
+   - Configure your Supabase authentication providers as needed
+
+## Security Best Practices
+
+- ✅ Environment variables are used for secrets
+- ✅ Demo credentials are only available in demo mode
+- ✅ Real authentication is used when properly configured
+- ✅ Credentials are not hardcoded in source code
+
+## Development vs Production
+
+- **Development**: Demo mode allows testing without setup
+- **Production**: Real Supabase integration with proper security 

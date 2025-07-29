@@ -1,31 +1,54 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-// Supabase configuration
-// For demo purposes, using a public demo project
-// Replace with your actual Supabase project credentials
-const supabaseUrl = 'https://xyzcompany.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5emNvbXBhbnkiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0NTU2NzI0MCwiZXhwIjoxOTYxMTQzMjQwfQ.demo-key-for-testing';
+// Supabase configuration using environment variables
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
-// For testing purposes, we'll use a mock setup
-// In production, replace these with your actual Supabase project URL and anon key
+// Validate that required environment variables are present
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn(
+    "Supabase credentials not found in environment variables. Running in demo mode.",
+  );
+  console.warn(
+    "To use real Supabase integration, set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_ANON_KEY",
+  );
+}
+
+// Create Supabase client with secure configuration
 export const supabase = createClient(
-  supabaseUrl,
-  supabaseAnonKey,
+  supabaseUrl || "https://demo.supabase.co",
+  supabaseAnonKey || "demo-key",
   {
     auth: {
-      // Enable auto refresh
+      // Enable auto refresh for better UX
       autoRefreshToken: true,
+      // Persist session for user convenience
       persistSession: true,
-      detectSessionInUrl: true
-    }
-  }
+      // Detect session in URL for OAuth flows
+      detectSessionInUrl: true,
+      // Additional security settings
+      flowType: "pkce",
+    },
+    // Global headers for additional security
+    global: {
+      headers: {
+        "X-Client-Info": "stop-drop-scroll-web",
+      },
+    },
+  },
 );
 
-// Test credentials for demo
-export const TEST_CREDENTIALS = {
-  email: 'test@stopdropscroll.co',
-  password: 'testpassword123',
-  displayName: 'Test User'
-};
+// Check if we're in demo mode
+export const isDemoMode =
+  !supabaseUrl || !supabaseAnonKey || supabaseUrl.includes("demo");
 
-export default supabase; 
+// Demo credentials - only for development/testing
+export const TEST_CREDENTIALS = isDemoMode
+  ? {
+      email: "demo@stopdropscroll.co",
+      password: "DemoPassword123!",
+      displayName: "Demo User",
+    }
+  : null;
+
+export default supabase;

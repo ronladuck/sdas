@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { scrollToSection, NAVIGATION_ITEMS } from '../../utils/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-import AuthModal from '../auth/AuthModal';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { scrollToSection, NAVIGATION_ITEMS } from "../../utils/navigation";
+import { useAuth } from "../../contexts/AuthContext";
+import AuthModal from "../auth/AuthModal";
 
 const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -16,7 +16,7 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
   useEffect(() => {
     if (user && isAuthModalOpen) {
       setIsAuthModalOpen(false);
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [user, isAuthModalOpen, navigate]);
 
@@ -26,8 +26,8 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
 
   const handleNavClick = (sectionId) => {
     // If we're not on the home page, navigate to home first
-    if (location.pathname !== '/') {
-      navigate('/', { replace: true });
+    if (location.pathname !== "/") {
+      navigate("/", { replace: true });
       // Wait for navigation to complete, then scroll
       setTimeout(() => {
         scrollToSection(sectionId);
@@ -39,22 +39,22 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
   };
 
   const handleLogoClick = () => {
-    if (location.pathname === '/') {
+    if (location.pathname === "/") {
       // If already on home page, scroll to top
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     } else {
       // If on another page, navigate to home
-      navigate('/');
+      navigate("/");
     }
     setIsMenuOpen(false);
   };
 
   const handleAuthClick = () => {
     if (user) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     } else {
       setIsAuthModalOpen(true);
     }
@@ -64,34 +64,36 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
   return (
     <>
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrollY > 50 
-          ? 'bg-white/80 backdrop-blur-lg shadow-lg' 
-          : 'bg-transparent'
-      }`}>
+      <nav
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          scrollY > 50
+            ? "bg-white/80 backdrop-blur-lg shadow-lg"
+            : "bg-transparent"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0">
-              <button 
+              <button
                 onClick={handleLogoClick}
                 className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity"
               >
                 Stop, Drop & Scroll
               </button>
             </div>
-            
+
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 {NAVIGATION_ITEMS.map((item) => (
-                  <button 
+                  <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}
                     className="text-gray-900 hover:text-purple-600 px-3 py-2 text-sm font-medium transition-colors"
@@ -99,17 +101,17 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
                     {item.label}
                   </button>
                 ))}
-                
+
                 {user ? (
                   <div className="flex items-center space-x-4">
-                    <button 
-                      onClick={() => navigate('/dashboard')}
+                    <button
+                      onClick={() => navigate("/dashboard")}
                       className="flex items-center space-x-2 text-gray-900 hover:text-purple-600 px-3 py-2 text-sm font-medium transition-colors"
                     >
                       <User size={16} />
                       <span>Dashboard</span>
                     </button>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
                     >
@@ -118,7 +120,7 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
                     </button>
                   </div>
                 ) : (
-                  <button 
+                  <button
                     onClick={handleAuthClick}
                     data-auth-trigger
                     className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105"
@@ -145,13 +147,13 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
           {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden bg-white/95 backdrop-blur-lg border-t"
             >
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {NAVIGATION_ITEMS.map((item) => (
-                  <button 
+                  <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}
                     className="block px-3 py-2 text-base font-medium text-gray-900 hover:text-purple-600 w-full text-left"
@@ -159,12 +161,12 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
                     {item.label}
                   </button>
                 ))}
-                
+
                 {user ? (
                   <>
-                    <button 
+                    <button
                       onClick={() => {
-                        navigate('/dashboard');
+                        navigate("/dashboard");
                         setIsMenuOpen(false);
                       }}
                       className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-gray-900 hover:text-purple-600 w-full"
@@ -172,7 +174,7 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
                       <User size={16} />
                       <span>Dashboard</span>
                     </button>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 w-full"
                     >
@@ -181,7 +183,7 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
                     </button>
                   </>
                 ) : (
-                  <button 
+                  <button
                     onClick={handleAuthClick}
                     data-auth-trigger
                     className="block px-3 py-2 text-base font-medium text-gray-900 hover:text-purple-600 w-full text-left"
@@ -196,12 +198,12 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, scrollY }) => {
       </nav>
 
       {/* Auth Modal */}
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
       />
     </>
   );
 };
 
-export default Navigation; 
+export default Navigation;

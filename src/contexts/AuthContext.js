@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase, TEST_CREDENTIALS } from '../config/supabase';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { supabase, TEST_CREDENTIALS, isDemoMode } from "../config/supabase";
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -15,9 +15,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalDefaultForm, setAuthModalDefaultForm] = useState('signin');
+  const [authModalDefaultForm, setAuthModalDefaultForm] = useState("signin");
 
-  const openAuthModal = (defaultForm = 'signin') => {
+  const openAuthModal = (defaultForm = "signin") => {
     setAuthModalDefaultForm(defaultForm);
     setIsAuthModalOpen(true);
   };
@@ -29,105 +29,136 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-      setLoading(false);
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        setUser(session?.user || null);
+      } catch (error) {
+        console.warn("Error getting session:", error.message);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user || null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user || null);
+      setLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signUp = async (email, password, displayName) => {
     try {
-      // For demo purposes, we'll simulate signup
-      if (email === TEST_CREDENTIALS.email) {
-        // Simulate successful signup
-        const mockUser = {
-          id: 'demo-user-id',
-          email: TEST_CREDENTIALS.email,
-          user_metadata: {
-            display_name: displayName || TEST_CREDENTIALS.displayName
-          }
+      if (isDemoMode) {
+        // Demo mode - simulate signup with test credentials
+        if (TEST_CREDENTIALS && email === TEST_CREDENTIALS.email) {
+          const mockUser = {
+            id: "demo-user-id",
+            email: TEST_CREDENTIALS.email,
+            user_metadata: {
+              display_name: displayName || TEST_CREDENTIALS.displayName,
+            },
+          };
+          setUser(mockUser);
+          return { user: mockUser, error: null };
+        }
+
+        return {
+          user: null,
+          error: {
+            message: "Demo mode: Please use the test credentials provided.",
+          },
         };
-        setUser(mockUser);
-        return { user: mockUser, error: null };
       }
 
-      // In a real app, this would be:
-      // const { data, error } = await supabase.auth.signUp({
-      //   email,
-      //   password,
-      //   options: {
-      //     data: {
-      //       display_name: displayName
-      //     }
-      //   }
-      // });
-      
-      // For demo, simulate error for other emails
-      return { 
-        user: null, 
-        error: { message: 'For demo purposes, please use the test credentials provided.' }
-      };
+      // Production mode - real Supabase signup
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            display_name: displayName,
+          },
+        },
+      });
+
+      return { user: data.user, error };
     } catch (error) {
-      return { user: null, error };
+      console.error("Signup error:", error);
+      return {
+        user: null,
+        error: { message: "An unexpected error occurred during signup." },
+      };
     }
   };
 
   const signIn = async (email, password) => {
     try {
-      // For demo purposes, check against test credentials
-      if (email === TEST_CREDENTIALS.email && password === TEST_CREDENTIALS.password) {
-        // Simulate successful login
-        const mockUser = {
-          id: 'demo-user-id',
-          email: TEST_CREDENTIALS.email,
-          user_metadata: {
-            display_name: TEST_CREDENTIALS.displayName
-          }
+      if (isDemoMode) {
+        // Demo mode - check against test credentials
+        if (
+          TEST_CREDENTIALS &&
+          email === TEST_CREDENTIALS.email &&
+          password === TEST_CREDENTIALS.password
+        ) {
+          const mockUser = {
+            id: "demo-user-id",
+            email: TEST_CREDENTIALS.email,
+            user_metadata: {
+              display_name: TEST_CREDENTIALS.displayName,
+            },
+          };
+          setUser(mockUser);
+          return { user: mockUser, error: null };
+        }
+
+        return {
+          user: null,
+          error: {
+            message:
+              "Invalid credentials. Please use the demo credentials provided.",
+          },
         };
-        setUser(mockUser);
-        return { user: mockUser, error: null };
       }
 
-      // In a real app, this would be:
-      // const { data, error } = await supabase.auth.signInWithPassword({
-      //   email,
-      //   password
-      // });
-      
-      // For demo, simulate error for wrong credentials
-      return { 
-        user: null, 
-        error: { message: 'Invalid credentials. Use test@stopdropscroll.co / testpassword123' }
-      };
+      // Production mode - real Supabase signin
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      return { user: data.user, error };
     } catch (error) {
-      return { user: null, error };
+      console.error("Signin error:", error);
+      return {
+        user: null,
+        error: { message: "An unexpected error occurred during signin." },
+      };
     }
   };
 
   const signOut = async () => {
     try {
-      // For demo purposes, just clear the user
-      setUser(null);
-      
-      // In a real app, this would be:
-      // const { error } = await supabase.auth.signOut();
-      // return { error };
-      
-      return { error: null };
-    } catch (error) {
+      if (isDemoMode) {
+        // Demo mode - just clear the user
+        setUser(null);
+        return { error: null };
+      }
+
+      // Production mode - real Supabase signout
+      const { error } = await supabase.auth.signOut();
       return { error };
+    } catch (error) {
+      console.error("Signout error:", error);
+      return { error: { message: "An error occurred during signout." } };
     }
   };
 
@@ -140,14 +171,11 @@ export const AuthProvider = ({ children }) => {
     isAuthModalOpen,
     authModalDefaultForm,
     openAuthModal,
-    closeAuthModal
+    closeAuthModal,
+    isDemoMode,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default AuthContext; 
+export default AuthContext;
